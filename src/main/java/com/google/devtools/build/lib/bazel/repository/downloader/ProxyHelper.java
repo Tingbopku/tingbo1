@@ -20,6 +20,7 @@ import java.net.Authenticator;
 import java.net.InetSocketAddress;
 import java.net.PasswordAuthentication;
 import java.net.Proxy;
+import java.net.URL;
 import java.net.URLDecoder;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -44,6 +45,18 @@ public class ProxyHelper {
       throws IOException {
     String lcUrl = requestedUrl.toLowerCase();
     String proxyAddress = null;
+    String noProxyUrl = env.get("no_proxy");
+    if (Strings.isNullOrEmpty(noProxyUrl)) {
+      noProxyUrl = env.get("NO_PROXY");
+    }
+    String[] noProxyUrlArray = noProxyUrl.split(",");
+    URL url = new URL(requestedUrl);
+    String requestedHost = url.getHost();
+    for(int i=0;i<noProxyUrlArray.length;i++){
+      if (requestedHost.contains(noProxyUrlArray[i])){
+      return createProxy(proxyAddress);
+      }
+    }
     if (lcUrl.startsWith("https")) {
       proxyAddress = env.get("https_proxy");
       if (Strings.isNullOrEmpty(proxyAddress)) {
