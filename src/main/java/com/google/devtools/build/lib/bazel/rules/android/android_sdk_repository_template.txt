@@ -1,0 +1,13 @@
+package(default_visibility = ["//visibility:public"])
+
+load("@bazel_tools//tools/android:android_sdk_repository_template.bzl", "create_android_sdk_rules")
+
+create_android_sdk_rules(
+    name = "%repository_name%",
+    build_tools_version = "%build_tools_version%",
+    build_tools_directory = "%build_tools_directory%",
+    api_level = %api_level%,
+)
+
+exports_files([
+%exported_files%])
